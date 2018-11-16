@@ -19,14 +19,22 @@ namespace IsolatedByInheritanceAndOverride
             // only get orders of book
             var ordersOfBook = orders.Where(x => x.Type == "Book");
 
-            var bookDao = new BookDao();
-            foreach (var order in ordersOfBook)
+	        IBookDao bookDao = this.GetBookDao();
+
+			foreach (var order in ordersOfBook)
             {
                 bookDao.Insert(order);
             }
         }
 
-        private List<Order> GetOrders()
+	    protected virtual IBookDao GetBookDao()
+	    {
+		    IBookDao bookDao = new BookDao();
+
+		    return bookDao;
+	    }
+		
+		protected virtual List<Order> GetOrders()
         {
             // parse csv file to get orders
             var result = new List<Order>();
@@ -69,7 +77,12 @@ namespace IsolatedByInheritanceAndOverride
         }
     }
 
-    public class Order
+	public interface IBookDao
+	{
+		void Insert(Order order);
+	}
+	
+	public class Order
     {
         public string Type { get; set; }
 
@@ -80,9 +93,9 @@ namespace IsolatedByInheritanceAndOverride
         public string CustomerName { get; set; }
     }
 
-    public class BookDao
+    public class BookDao : IBookDao
     {
-        internal void Insert(Order order)
+	    public void Insert(Order order)
         {
             // directly depend on some web service
             //var client = new HttpClient();

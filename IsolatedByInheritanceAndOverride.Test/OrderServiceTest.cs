@@ -62,10 +62,31 @@ namespace IsolatedByInheritanceAndOverride.Test
         [TestMethod]
         public void Test_SyncBookOrders_3_Orders_Only_2_book_order()
         {
-            // hard to isolate dependency to unit test
-
-            //var target = new OrderService();
+            var target = new OrderService();
+			//target.orders = 
             //target.SyncBookOrders();
+
         }
+
+	    public class fakeOrderService : OrderService
+	    {
+		    protected override List<Order> GetOrders()
+		    {
+			    return base.GetOrders();
+		    }
+	    }
+
+
+		private Order FakeLOrderList()
+	    {
+		    return new Order
+		    {
+			    Type = "Book",
+			    Price = 100,
+			    ProductName = "123",
+
+			};
+	    }
+
     }
 }
